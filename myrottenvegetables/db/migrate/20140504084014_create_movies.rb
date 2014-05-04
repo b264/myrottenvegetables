@@ -11,6 +11,6 @@ class CreateMovies < ActiveRecord::Migration
   end
   #migrate back, undo this migration
   def down
-    drop_tables 'movies'
+    drop_table 'movies'
   end
 end
