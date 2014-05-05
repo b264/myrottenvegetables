@@ -3,6 +3,7 @@ Myrottenvegetables::Application.routes.draw do
   root :to => redirect('/movies')
   
   #http://aqueous-temple-2501.herokuapp.com/ | git@heroku.com:aqueous-temple-2501.git
+  #http://secret-crag-4470.herokuapp.com/ | git@heroku.com:secret-crag-4470.git
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
