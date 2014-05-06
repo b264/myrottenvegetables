@@ -1,17 +1,22 @@
 =provide(:title, 'New Movie')
-%h2 Edit details for #{@movie.title}
-%table#movie
-  %thead
-    %tr
-      %th Movie Title
-      %th Rating
-      %th Release Date
-      %th Description
-  %tbody
-    %tr
-      %td= @movie.title
-      %td= @movie.rating
-      %td= @movie.release_date.strftime("%d %B %Y")
-      %td= @movie.description
-=link_to 'Create new entry', movie_path, :method => :post
+%h2 Create new movie
+- form_for @movie do |m|
+  %table#movie
+    %thead
+      %tr
+        %th Movie Title
+        %th Rating
+        %th Release Date
+        %th Description
+    %tbody
+      %tr
+        %td= m.text_field :title
+        %td= m.text_field :rating
+        %td= m.text_field :release_date
+        %td= m.text_field :description
+  =m.submit ('Create')
 =link_to 'Back to Index', movies_path
+%br
+%br
+%br
+=link_to movies_path, :method => :post

@@ -13,3 +13,4 @@
         %td= movie.title
         %td= movie.rating
         %td= link_to "More about #{movie.title}", movie_path(movie)
+=link_to 'Create new movie', new_movie_path, :method => :get
