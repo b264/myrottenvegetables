@@ -1,0 +1,18 @@
+=provide(:title, 'More Details')
+%h2 Detail for #{@movie.title}
+%table#movie
+  %thead
+    %tr
+      %th Movie Title
+      %th Rating
+      %th Release Date
+      %th Description
+  %tbody
+    %tr
+      %td= @movie.title
+      %td= @movie.rating
+      %td= @movie.release_date.strftime("%d %B %Y")
+      %td= @movie.description
+=link_to 'Back to Index', movies_path
+=link_to 'Edit movie details', edit_movie_path
+=link_to 'Delete Movie', movie_path, :confirm => 'Are you sure you want to delete ' + @movie.title + '?', :method => :delete

@@ -1,0 +1,17 @@
+=provide(:title, 'Edit Movie')
+%h2 Edit details for #{@movie.title}
+%table#movie
+  %thead
+    %tr
+      %th Movie Title
+      %th Rating
+      %th Release Date
+      %th Description
+  %tbody
+    %tr
+      %td= @movie.title
+      %td= @movie.rating
+      %td= @movie.release_date.strftime("%d %B %Y")
+      %td= @movie.description
+=link_to 'Save', movie_path, :method => :put
+=link_to 'Back to Index', movies_path
