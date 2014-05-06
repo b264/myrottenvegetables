@@ -1,6 +1,8 @@
 class MoviesController < ApplicationController
   def index
-    @movies = Movie.all
+    starwars = Movie.create!(:title => 'Star Wars', :release_date => '25/4/1977', :rating => 'PG')
+    #@movies = Movie.all
+    @movies = starwars
   end
   def create
   end
