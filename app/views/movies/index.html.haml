@@ -7,11 +7,9 @@
       %th Release Date
       %th More Info
   %tbody
-    %tr
-      %td test table cell
-    -# @movies.each do |movie|
-      -#/%tr
-        -#/%td= movie.title
-        -#/%td= movie.rating
-        -#/%td= movie.release_date
-        -#/%td= link_to "More about #{movie.title}", movie_path(movie)
+    - @movies.each do |movie|
+      %tr
+        %td= movie.title
+        %td= movie.rating
+        %td= movie.release_date
+        %td= link_to "More about #{movie.title}", movie_path(movie)
