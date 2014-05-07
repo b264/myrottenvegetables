@@ -14,15 +14,28 @@ class MoviesController < ApplicationController
   end
   def show
     @movie= Movie.find_by_id(params[:id])
-    #@movies = Movie.all
   end
   def update
+    @movie= Movie.find_by_id(params[:id])
+    params.each_pair { |key, value|
+      eval (%{
+        if @movie.respond_to?("#{key}")
+          @movie.#{key}= value
+        end
+      })
+    }
+    flash.notice= @movie.title
+    if @movie.save
+      flash.notice+= ' has been saved.'
+    else
+      flash.notice+= ' was not saved'
+    end
+    redirect_to :movies
   end
   def destroy
     @movie= Movie.find_by_id(params[:id])
     flash.notice= @movie.title
-    success= @movie.destroy
-    if success then
+    if @movie.destroy
       flash.notice+= ' has been deleted.'
     else
       flash.notice+= ' was not deleted'

@@ -1,21 +1,20 @@
-=provide(:title, 'Edit Movie')
+= provide(:title, 'Edit Movie')
 %h2 Edit details for #{@movie.title}
-- form_tag({:controller => :movies, :action => :update}, :method => :put) do
-  %table#movie
+= form_tag({:controller => :movies, :action => :update}, :method => :put) do
+  %table#edit_movie
     %thead
-      %tr
-        %th Movie Title
-        %th Rating
-        %th Release Date
-        %th Description
     %tbody
-    
       %tr
-        %td= label_tag(:q, "title:")
-        %td= text_field_tag(:q, @movie.title)
+        %td= label_tag(:q, 'title:')
+        %td= text_field_tag(:title, @movie.title)
       %tr
-        %td= @movie.rating
-        %td= @movie.release_date.strftime("%d %B %Y")
-        %td= @movie.description
-  =submit_tag('Save')
-=link_to 'Back to Index', movies_path
+        %td= label_tag(:q, 'rating:')
+        %td= text_field_tag(:rating, @movie.rating)
+      %tr
+        %td= label_tag(:q, 'release date:')
+        %td= text_field_tag(:release_date, @movie.release_date.strftime("%d %B %Y"))
+      %tr
+        %td= label_tag(:q, 'description:')
+        %td= text_field_tag(:description, @movie.description)
+  = submit_tag('Save')
+= link_to 'Back to Index', movies_path

@@ -7,13 +7,6 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-<% unless flash.notice.nil? %>
-  <h1><%= flash.notice %></h1><br/>
-<% end %>
-<% unless flash.alert.nil? %>
-  <h3><%= flash.alert %></h3><br/>
-<% end %>
 <%= yield %>
-
 </body>
 </html>
