@@ -6,11 +6,13 @@
     %tr
       %th Movie Title
       %th Rating
+      %th Release Date
       %th More Info
   %tbody
     - @movies.each do |movie|
       %tr
         %td= movie.title
         %td= movie.rating
+        %td= movie.date_formatted
         %td= link_to "More about #{movie.title}", movie_path(movie)
 =link_to 'Create new movie', new_movie_path, :method => :get
