@@ -17,10 +17,10 @@ class MoviesController < ApplicationController
       })
     }
   end
-  def action_notify(old_action, name, flag)
+  def action_notify(name, flag)
     flash.notice= name.to_s
     action= caller[0][/`([^']*)'/, 1] #name of the method that called this one
-    unless action.split.last == 'e'
+    unless action.last(1) == 'e'
       action+= 'e' #append an e on the end of words not ending in e
     end
     if flag
@@ -34,7 +34,7 @@ class MoviesController < ApplicationController
   def create
     @movie= Movie.new
     fill_methods_by_hash! @movie, params[:movie]
-    action_notify 'create', @movie.title, @movie.save
+    action_notify @movie.title, @movie.validated_save
   end
   def show
     @movie= Movie.find_by_id(params[:id])
@@ -42,10 +42,10 @@ class MoviesController < ApplicationController
   def update
     @movie= Movie.find_by_id(params[:id])
     fill_methods_by_hash! @movie, params
-    action_notify 'update', @movie.title, @movie.save
+    action_notify @movie.title, @movie.validated_save
   end
   def destroy
     @movie= Movie.find_by_id(params[:id])
-    action_notify 'delete', @movie.title, @movie.destroy
+    action_notify @movie.title, @movie.destroy
   end
 end

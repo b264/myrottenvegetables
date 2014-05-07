@@ -16,6 +16,18 @@ if defined?(Bundler)
 end
 
 module Myrottenvegetables
+  class NilClass
+    #override one of Ruby's annoyances. nil IS empty.
+    def empty?
+      true
+    end
+  end
+  class String
+    #get the last n characters of a string
+    def last(n)
+      self[-n, n]
+    end
+  end
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

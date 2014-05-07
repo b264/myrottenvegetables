@@ -12,7 +12,7 @@
         %td= text_field_tag(:rating, @movie.rating)
       %tr
         %td= label_tag(:q, 'release date:')
-        %td= text_field_tag(:release_date, @movie.release_date.strftime("%d %B %Y"))
+        %td= text_field_tag(:release_date, @movie.date_formatted)
       %tr
         %td= label_tag(:q, 'description:')
         %td= text_field_tag(:description, @movie.description)
