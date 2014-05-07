@@ -11,8 +11,7 @@
     %tr
       %td= @movie.title
       %td= @movie.rating
-      %td= @movie.release_date
-      %td= #unless @movie.release_date==nil then @movie.release_date.strftime("%d %B %Y") end
+      %td= @movie.release_date.strftime("%d %B %Y")
       %td= @movie.description
 =link_to 'Back to Index', movies_path
 =link_to 'Edit Movie Details', edit_movie_path
