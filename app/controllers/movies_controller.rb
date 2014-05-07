@@ -1,6 +1,5 @@
 class MoviesController < ApplicationController
   def index
-    #starwars = Movie.create!(:title => 'Star Wars', :release_date => '25/4/1977', :rating => 'PG')
     @movies = Movie.all
   end
   def new
@@ -18,8 +17,12 @@ class MoviesController < ApplicationController
       })
     }
   end
-  def action_notify(action, name, flag)
+  def action_notify(old_action, name, flag)
     flash.notice= name.to_s
+    action= caller[0][/`([^']*)'/, 1] #name of the method that called this one
+    unless action.split.last == 'e'
+      action+= 'e' #append an e on the end of words not ending in e
+    end
     if flag
       flash.notice+= ' has been '+ action.to_s + 'd.'
     else
@@ -30,39 +33,19 @@ class MoviesController < ApplicationController
   #CRUD actions below
   def create
     @movie= Movie.new
-    #@movie.ttle
     fill_methods_by_hash! @movie, params[:movie]
     action_notify 'create', @movie.title, @movie.save
-    #flash.notice= @movie.title.to_s
-    #if @movie.save
-    #  flash.notice+= ' has been created.'
-    #else
-    #  flash.notice+= ' was not created'
-    #end
-    #redirect_to :movies
   end
   def show
     @movie= Movie.find_by_id(params[:id])
   end
   def update
     @movie= Movie.find_by_id(params[:id])
-    fill_methods_by_hash @movie, params
-    flash.notice= @movie.title.to_s
-    if @movie.save
-      flash.notice+= ' has been saved.'
-    else
-      flash.notice+= ' was not saved'
-    end
-    redirect_to :movies
+    fill_methods_by_hash! @movie, params
+    action_notify 'update', @movie.title, @movie.save
   end
   def destroy
     @movie= Movie.find_by_id(params[:id])
-    flash.notice= @movie.title.to_s
-    if @movie.destroy
-      flash.notice+= ' has been deleted.'
-    else
-      flash.notice+= ' was not deleted'
-    end
-    redirect_to :movies
+    action_notify 'delete', @movie.title, @movie.destroy
   end
 end
