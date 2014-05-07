@@ -1,7 +1,9 @@
 class Movie < ActiveRecord::Base
   attr_accessible :title, :rating, :description, :release_date
-  #sort ascending by title unless specified
-  default_scope order('title ASC')
+  def self.default_scope
+    #sort ascending by title
+    #order('title ASC')
+  end
   def date_formatted
     if self.release_date.nil?
       ''
