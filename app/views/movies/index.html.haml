@@ -9,7 +9,7 @@
           - if @sort== attr
             %th.highlight= attr.to_s.titleize
           - else
-            %th= link_to attr.to_s.titleize, movies_path(:sort_by => attr), :method => :get, :class => :link
+            %th= eval("link_to attr.to_s.titleize, movies_path(:sort_by => attr), :method => :get, :class => :link, :id => :#{attr.to_s}_header")
   %tbody
     - @movies.each do |movie|
       %tr
