@@ -1,9 +1,15 @@
 class MoviesController < ApplicationController
   def index
     #@movies = Movie.all
+    @sort= 'title'
     if params[:sort_by].nil?
       params[:sort_by]= 'title'
     end
+    Movie.accessible_attributes.each { |attr|
+      if params[:sort_by]== attr
+        @sort= attr
+      end
+    }
     @movies= Movie.find(:all, :order => params[:sort_by])
   end
   def new
@@ -23,6 +29,9 @@ class MoviesController < ApplicationController
   end
   def action_notify(name, flag)
     flash.notice= name.to_s
+    if flash.notice.length < 1
+      flash.notice= 'Database entry'
+    end
     action= caller[0][/`([^']*)'/, 1] #name of the method that called this one
     unless action.last(1) == 'e'
       action+= 'e' #append an e on the end of words not ending in e

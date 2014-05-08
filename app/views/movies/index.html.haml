@@ -1,18 +1,20 @@
 =flash.notice
 
-%h2=link_to 'All Movies', movies_path
+%h2=link_to 'All Movies', movies_path, :class => :link, :id => :all_movies_link
 %table#movies
   %thead
     %tr
-      %th=link_to 'Movie Title', movies_path(:sort_by => :title), :method => :get, :id => :title_header
-      %th=link_to 'Rating', movies_path(:sort_by => :rating), :method => :get
-      %th=link_to 'Release Date', movies_path(:sort_by => :release_date), :method => :get, :id => :release_date_header
-      %th=link_to 'More Info', movies_path, :method => :get
+      - Movie.accessible_attributes.each do |attr|
+        -unless attr.empty?
+          - if @sort== attr
+            %th.highlight= attr.to_s.titleize
+          - else
+            %th= link_to attr.to_s.titleize, movies_path(:sort_by => attr), :method => :get, :class => :link
   %tbody
     - @movies.each do |movie|
       %tr
         %td= movie.title
         %td= movie.rating
         %td= movie.date_formatted
-        %td= link_to "More about #{movie.title}", movie_path(movie)
-=link_to 'Create new movie', new_movie_path, :method => :get
+        %td= link_to "More about #{movie.title}", movie_path(movie), :class => :more_info_link
+= link_to 'Create new movie', new_movie_path, :method => :get, :class => :link, :id => :new_movie_link
