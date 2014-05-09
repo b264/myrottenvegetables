@@ -2,13 +2,16 @@
   =flash.notice
   %br
 %h2=link_to 'Movie List', movies_path, :class => :link, :id => :all_movies_link
-Include:
-- @ratings.each do |movie|
-  %nbsp
-  %label
-    = movie.rating
-    = check_box_tag movie.rating, 1, true
-= submit_tag 'Refresh'
+= form_tag({:controller => :movies, :action => :index}, :method => :get) do
+  Include:
+  - if @sorted_by_user
+    = hidden_field_tag :sort_by, @sort_by
+  - @ratings.each do |rating, visible|
+    %label
+      = rating
+      = check_box_tag rating, '1', visible
+  = submit_tag 'Refresh'
+%br
 %table#movies
   %thead
     %tr

@@ -13,8 +13,34 @@ class MoviesController < ApplicationController
         @sort_by= attr
       end
     }
-    @movies= Movie.find(:all, :order => params[:sort_by])
-    @ratings= Movie.find(:all, :select => "DISTINCT(rating)", :order => 'rating DESC')
+    @distinct_ratings= Movie.find(:all, :select => "DISTINCT(rating)", :order => 'rating DESC')
+    @ratings= Hash.new
+    number_selected= 0
+    @distinct_ratings.each { |movie|
+      @ratings[movie.rating]= '0'.to_boolean
+      if params.has_key? movie.rating
+        @ratings[movie.rating]= params[movie.rating].to_boolean
+        number_selected+= 1
+      end
+    }
+    if number_selected < 1
+      # if nothing is selected, mark everything selected
+      @distinct_ratings.each { |movie|
+        @ratings[movie.rating]= '1'.to_boolean
+      }
+      # if nothing is selected, select everything
+      @movies= Movie.find(:all, :order => params[:sort_by])
+    else
+      # custom selection
+      @match_list= Array.new
+      @ratings.each { |key, value|
+        if value
+          @match_list.push key
+        end
+      }
+      @movies= Movie.where(:rating => @match_list).order(params[:sort_by])
+    end
+    #@params=params
   end
   def new
     @movie= Movie.new
