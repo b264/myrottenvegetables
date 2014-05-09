@@ -14,7 +14,7 @@ class MoviesController < ApplicationController
     end
     # if they have saved parameters stick them in a RESTful URI and redirect
     if session.has_key? :saved_params
-      unless session[:saved_params].is_nil?
+      unless session[:saved_params]== nil
         session[:saved_params].each { |key, value|
           params[key]= value
         }

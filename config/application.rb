@@ -67,5 +67,8 @@ module Myrottenvegetables
     
     # environment not present to boot for heroku precompile
     config.assets.initialize_on_precompile = false
+    
+    # always force SSL connection
+    config.force_ssl = true
   end
 end
