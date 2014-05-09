@@ -11,6 +11,9 @@
  *= require_self
  *= require_tree .
  */
+body {
+  background-color: #EBEBF5;
+}
 table#movies th.highlight {
   background-color: yellow;
 }

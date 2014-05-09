@@ -1,11 +1,12 @@
 class MoviesController < ApplicationController
   def index
-    #@movies = Movie.all
+    #default sort field
     @sort_by= 'title'
-    @sorted_by_user= true
     if params[:sort_by].nil?
-      params[:sort_by]= 'title'
+      params[:sort_by]= @sort_by
       @sorted_by_user= false
+    else
+      @sorted_by_user= true
     end
     Movie.accessible_attributes.each { |attr|
       if params[:sort_by]== attr
@@ -13,6 +14,7 @@ class MoviesController < ApplicationController
       end
     }
     @movies= Movie.find(:all, :order => params[:sort_by])
+    @ratings= Movie.find(:all, :select => "DISTINCT(rating)", :order => 'rating DESC')
   end
   def new
     @movie= Movie.new

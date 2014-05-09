@@ -1,6 +1,14 @@
-=flash.notice
-
-%h2=link_to 'All Movies', movies_path, :class => :link, :id => :all_movies_link
+- unless flash.notice.to_s.length < 1
+  =flash.notice
+  %br
+%h2=link_to 'Movie List', movies_path, :class => :link, :id => :all_movies_link
+Include:
+- @ratings.each do |movie|
+  %nbsp
+  %label
+    = movie.rating
+    = check_box_tag movie.rating, 1, true
+= submit_tag 'Refresh'
 %table#movies
   %thead
     %tr
@@ -16,8 +24,12 @@
   %tbody
     - @movies.each do |movie|
       %tr
-        %td= movie.title
-        %td= movie.rating
-        %td= movie.date_formatted
-        %td= link_to "More about #{movie.title}", movie_path(movie), :class => :more_info_link
+        - Movie.accessible_attributes.each do |attr|
+          - unless attr.empty?
+            - if attr== 'description'
+              %td= link_to "More about #{movie.title}", movie_path(movie), :class => :more_info_link
+            - elsif attr== 'release_date'
+              %td= movie.date_formatted
+            - else
+              %td= eval("movie.#{attr}")
 = link_to 'Create new movie', new_movie_path, :method => :get, :class => :link, :id => :new_movie_link
