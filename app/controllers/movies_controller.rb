@@ -13,20 +13,19 @@ class MoviesController < ApplicationController
         @sort_by= attr
       end
     }
-    @distinct_ratings= Movie.find(:all, :select => "DISTINCT(rating)", :order => 'rating DESC')
     @ratings= Hash.new
     number_selected= 0
-    @distinct_ratings.each { |movie|
-      @ratings[movie.rating]= '0'.to_boolean
-      if params.has_key? movie.rating
-        @ratings[movie.rating]= params[movie.rating].to_boolean
+    Movie.distinct_ratings.each { |rating|
+      @ratings[rating]= '0'.to_boolean
+      if params.has_key? rating
+        @ratings[rating]= params[rating].to_boolean
         number_selected+= 1
       end
     }
     if number_selected < 1
       # if nothing is selected, mark everything selected
-      @distinct_ratings.each { |movie|
-        @ratings[movie.rating]= '1'.to_boolean
+      Movie.distinct_ratings.each { |rating|
+        @ratings[rating]= '1'.to_boolean
       }
       # if nothing is selected, select everything
       @movies= Movie.find(:all, :order => params[:sort_by])

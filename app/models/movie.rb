@@ -22,4 +22,11 @@ class Movie < ActiveRecord::Base
       return self.save
     end
   end
+  def self.distinct_ratings
+    ratings= Array.new
+    Movie.find(:all, :select => "DISTINCT(rating)", :order => 'rating DESC').each { |movie|
+      ratings.push movie.rating
+    }
+    ratings
+  end
 end
