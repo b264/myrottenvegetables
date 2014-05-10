@@ -17,10 +17,12 @@ class Movie < ActiveRecord::Base
   def validated_save
     if self.title.empty?
       #refuse to save without a title at a minimum
-      return false
+    elsif self.rating== 'sort_by'
+      # this will create a bug so reject it
     else
       return self.save
     end
+    return false
   end
   def self.distinct_ratings
     ratings= Array.new
