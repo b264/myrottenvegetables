@@ -1,19 +1,6 @@
 - unless flash.notice.to_s.length < 1
   =flash.notice
   %br
-session[:saved_params]
-= session.class
-= session[:saved_params]
-%br
-%br
-session
-= session.class
-= session
-%br
-%br
-params[]
-= params.class
-= params
 %h2=link_to 'Movie List', movies_path, :class => :link, :id => :all_movies_link
 = form_tag movies_path, :method => :get, :id => :ratings_form do
   Include:
