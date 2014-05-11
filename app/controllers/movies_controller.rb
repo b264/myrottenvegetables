@@ -5,6 +5,7 @@ class MoviesController < ApplicationController
   end
   def force_clear_saved_session?
     # URI override to force-clear saved session information
+    # http://server.domain/path/model?session_type=new
     if params.has_key? :session_type
       if params[:session_type]== 'new'
         return true
@@ -74,6 +75,45 @@ class MoviesController < ApplicationController
     end
     reset_session_params
   end
+  def ratings_selected
+    @ratings= Hash.new
+    number_selected= 0
+    Movie.distinct_ratings.each { |rating|
+      # default is off
+      @ratings[rating]= '0'.to_boolean
+      if params.has_key? rating
+        # use the supplied rating filter
+        @ratings[rating]= params[rating].to_boolean
+        add_to_saved_rating rating
+        number_selected+= 1
+      end
+    }
+    return number_selected
+  end
+  def add_to_saved_rating (rating)
+    if session[:saved_params]== nil
+      session[:saved_params] = {}
+    end
+    session[:saved_params][rating] = params[rating]
+  end
+  def sort_criteria
+    #default sort field
+    @sort_by= 'title'
+    @sorted_by_user= false
+    # enact each new sort criteria, if it's a valid field in the model
+    Movie.accessible_attributes.each { |attr|
+      if new_sort_criteria_supplied?
+        if params[:sort_by]== attr
+          @sort_by= attr
+          #if @sorted_by_user
+            session[:saved_params] = {:sort_by => attr}
+            @sorted_by_user= true
+          #end
+        end
+      end
+    }
+    return params[:sort_by]
+  end
   def index
     ensure_session_has_key
     if force_clear_saved_session?
@@ -84,43 +124,13 @@ class MoviesController < ApplicationController
       redirect_to_RESTful_URI
     # no saved paramters to parse, prepare for view render
     else
-      #default sort field
-      @sort_by= 'title'
-      @sorted_by_user= false
-      # enact a new sort criteria, if it's a valid field in the model
-      Movie.accessible_attributes.each { |attr|
-        if params.has_key? :sort_by
-          if params[:sort_by]== attr
-            @sort_by= attr
-            #if @sorted_by_user
-              session[:saved_params] = {:sort_by => attr}
-              @sorted_by_user= true
-            #end
-          end
-        end
-      }
-      # did the user filter the ratings
-      @ratings= Hash.new
-      number_selected= 0
-      Movie.distinct_ratings.each { |rating|
-        @ratings[rating]= '0'.to_boolean
-        if params.has_key? rating
-          # use the supplied rating filter
-          @ratings[rating]= params[rating].to_boolean
-          if session[:saved_params]== nil
-            session[:saved_params] = {}
-          end
-          session[:saved_params][rating] = params[rating]
-          number_selected+= 1
-        end
-      }
-      if number_selected < 1
+      if ratings_selected < 1
         # if nothing is selected, mark everything selected
         Movie.distinct_ratings.each { |rating|
           @ratings[rating]= '1'.to_boolean
         }
         # if nothing is selected, select everything
-        @movies= Movie.find(:all, :order => params[:sort_by])
+        @movies= Movie.find(:all, :order => sort_criteria)
       else
         # custom selection
         @match_list= Array.new
@@ -129,7 +139,7 @@ class MoviesController < ApplicationController
             @match_list.push key
           end
         }
-        @movies= Movie.where(:rating => @match_list).order(params[:sort_by])
+        @movies= Movie.where(:rating => @match_list).order(sort_criteria)
       end
     end
   end
