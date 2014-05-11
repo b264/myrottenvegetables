@@ -13,10 +13,11 @@ class MoviesController < ApplicationController
     return false
   end
   def force_clear_session
-    if params.has_key? :session_type
-      params.delete :session_type
-    end
+    params.delete :session_type
     reset_session_params
+  end
+  def reset_session_params
+    session[:saved_params]= nil
   end
   def saved_parameters?
     if session[:saved_params]== nil
@@ -29,44 +30,57 @@ class MoviesController < ApplicationController
       reset_session_params
     end
   end
+  def new_filter_criteria_supplied?
+    new_filter_criteria= false
+    Movie.distinct_ratings.each { |rating|
+      new_filter_criteria |= params.has_key? rating
+    }
+    return new_filter_criteria
+  end
+  def saved_filter_criteria?
+    saved_filter_criteria= false
+    Movie.distinct_ratings.each { |rating|
+      saved_filter_criteria |= session[:saved_params].has_key? rating
+    }
+    return saved_filter_criteria
+  end
+  def restore_saved_filter_criteria
+    Movie.distinct_ratings.each { |rating|
+      params[rating]= '0'
+      if session[:saved_params].has_key? rating
+        params[rating]= session[:saved_params][rating]
+      end
+    }
+  end
+  def new_sort_criteria_supplied?
+    params.has_key? :sort_by
+  end
+  def saved_sort_criteria?
+    session[:saved_params].has_key? :sort_by
+  end
+  def restore_saved_sort_criteria
+    params[:sort_by]= session[:saved_params][:sort_by]
+  end
+  def merge_parameters
+    unless new_filter_criteria_supplied?
+      if saved_filter_criteria?
+        restore_saved_filter_criteria
+      end
+    end
+    unless new_sort_criteria_supplied?
+      if saved_sort_criteria?
+        restore_saved_sort_criteria
+      end
+    end
+    reset_session_params
+  end
   def index
     ensure_session_has_key
     if force_clear_saved_session?
       force_clear_session
       redirect_to_RESTful_URI
-    end
-    # if they have saved parameters stick them in a RESTful URI and redirect
-    if saved_parameters?
-      # have new filter criteria been supplied
-      new_filter_criteria= false
-      Movie.distinct_ratings.each { |rating|
-        new_filter_criteria |= params.has_key? rating
-      }
-      # have we some saved filter criteria
-      saved_filter_criteria= false
-      Movie.distinct_ratings.each { |rating|
-        saved_filter_criteria |= session[:saved_params].has_key? rating
-      }
-      unless new_filter_criteria
-        if saved_filter_criteria
-          # put saved filter criteria back in place
-          Movie.distinct_ratings.each { |rating|
-            params[rating]= '0'
-            if session[:saved_params].has_key? rating
-              params[rating]= session[:saved_params][rating]
-            end
-          }
-        end
-      end
-      # if new sort criteria hasn't been requested
-      unless params.has_key? :sort_by
-        # do we have saved sort criteria
-        if session[:saved_params].has_key? :sort_by
-          # put old sort criteria back
-          params[:sort_by]= session[:saved_params][:sort_by]
-        end
-      end
-      reset_session_params
+    elsif saved_parameters?
+      merge_parameters
       redirect_to_RESTful_URI
     # no saved paramters to parse, prepare for view render
     else
@@ -118,9 +132,6 @@ class MoviesController < ApplicationController
         @movies= Movie.where(:rating => @match_list).order(params[:sort_by])
       end
     end
-  end
-  def reset_session_params
-    session[:saved_params]= nil
   end
   def new
     @movie= Movie.new
