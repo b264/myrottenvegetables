@@ -15,14 +15,24 @@ class Movie < ActiveRecord::Base
     @release_date= Date.parse(new_value)
   end
   def validated_save
-    if self.title.empty?
+    if self.title.empty? or blacklisted_rating? self.rating
       #refuse to save without a title at a minimum
-    elsif self.rating== 'sort_by'
-      # this will create a bug so reject it
+      return false
     else
       return self.save
     end
-    return false
+  end
+  def blacklisted_rating? (rating)
+    # these are reserved and will cause bugs if used
+    if    rating== 'sort_by'
+    elsif rating== 'utf8'
+    elsif rating== 'commit'
+    elsif rating== '_method'
+    elsif rating== 'authenticity_token'
+    else
+      return false
+    end
+    return true
   end
   def self.distinct_ratings
     ratings= Array.new

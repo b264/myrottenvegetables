@@ -127,7 +127,7 @@ class MoviesController < ApplicationController
     if flag
       flash.notice+= ' has been '+ action.to_s + 'd.'
     else
-      flash.notice+= ' was not '+ action.to_s + 'd!'
+      flash.notice+= ' was NOT '+ action.to_s + 'd!'
     end
     redirect_to :movies
   end
