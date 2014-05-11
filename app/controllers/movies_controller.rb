@@ -1,19 +1,42 @@
 class MoviesController < ApplicationController
-  def index
+  def redirect_to_RESTful_URI
+    flash.keep
+    redirect_to movies_path(params), :method => :get
+  end
+  def force_clear_saved_session?
+    # URI override to force-clear saved session information
+    if params.has_key? :session_type
+      if params[:session_type]== 'new'
+        return true
+      end
+    end
+    return false
+  end
+  def force_clear_session
+    if params.has_key? :session_type
+      params.delete :session_type
+    end
+    reset_session_params
+  end
+  def saved_parameters?
+    if session[:saved_params]== nil
+      return false
+    end
+    return true
+  end
+  def ensure_session_has_key
     unless session.has_key? :saved_params
       reset_session_params
     end
-    # URI override to force clear saved session information
-    if params.has_key? :session_type
-      if params[:session_type]== 'new'
-        reset_session_params
-        params.delete :session_type
-        flash.keep
-        redirect_to movies_path(params), :method => :get
-      end
+  end
+  def index
+    ensure_session_has_key
+    if force_clear_saved_session?
+      force_clear_session
+      redirect_to_RESTful_URI
     end
     # if they have saved parameters stick them in a RESTful URI and redirect
-    unless session[:saved_params]== nil
+    if saved_parameters?
       # have new filter criteria been supplied
       new_filter_criteria= false
       Movie.distinct_ratings.each { |rating|
@@ -44,8 +67,7 @@ class MoviesController < ApplicationController
         end
       end
       reset_session_params
-      flash.keep
-      redirect_to movies_path(params), :method => :get
+      redirect_to_RESTful_URI
     # no saved paramters to parse, prepare for view render
     else
       #default sort field
