@@ -32,8 +32,8 @@ class MoviesController < ApplicationController
     elsif saved_parameters?
       merge_parameters
       redirect_to_RESTful_URI
-    # no saved paramters to parse, prepare for view render
     else
+      # send to view
       @movies= Movie.where(:rating => match_list).order(sort_criteria)
     end
   end
@@ -72,7 +72,7 @@ class MoviesController < ApplicationController
     else
       flash.notice+= ' was NOT ' + action.to_s + 'd!'
     end
-    redirect_to :movies
+    redirect_to movies_path(), :method => :get
   end
   def fill_methods_by_hash!(object, hash)
     hash.each_pair { |key, value|
