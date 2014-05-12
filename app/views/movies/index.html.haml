@@ -34,3 +34,5 @@
             - else
               %td= eval("movie.#{attr}")
 = link_to 'Create new movie', new_movie_path, :method => :get, :class => :link, :id => :new_movie_link
+%br
+= link_to 'Reset filter and sort settings', movies_path(:session_type => :new), :method => :get, :class => :link, :id => :reset_session

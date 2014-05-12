@@ -37,9 +37,9 @@ class MoviesController < ApplicationController
       @movies= Movie.where(:rating => match_list).order(sort_criteria)
     end
   end
-  # not technically routed to a URI, but to parameters
+  # methods without URI routing assigned
   def force_clear_saved_session?
-    # URI override to force-clear saved session information
+    # URI parameters override to force-clear saved session information
     # http://server.domain/path/model?session_type=new
     if params.has_key? :session_type
       if params[:session_type]== 'new'
@@ -48,7 +48,6 @@ class MoviesController < ApplicationController
     end
     return false
   end
-  # methods without URI routing assigned
   def match_list
     match_array= Array.new
     ratings_selected.each_pair { |rating, value|
@@ -109,17 +108,17 @@ class MoviesController < ApplicationController
   def new_filter_criteria_supplied?
     new_filter_criteria= false
     Movie.distinct_ratings.each { |rating|
-      new_filter_criteria |= params.has_key? rating
+      new_filter_criteria ||= params.has_key? rating
     }
     return new_filter_criteria
   end
   def new_sort_criteria_supplied?
-    params.has_key? :sort_by
+    return params.has_key? :sort_by
   end
   def saved_filter_criteria?
     saved_filter_criteria= false
     Movie.distinct_ratings.each { |rating|
-      saved_filter_criteria |= session[:saved_params].has_key? rating
+      saved_filter_criteria ||= session[:saved_params].has_key? rating
     }
     return saved_filter_criteria
   end
@@ -137,22 +136,14 @@ class MoviesController < ApplicationController
     params[:sort_by]= session[:saved_params][:sort_by]
   end
   def merge_parameters
-    unless new_filter_criteria_supplied?
-      if saved_filter_criteria?
-        if flash.notice== nil
-          flash.notice= ' '
-        end
-        restore_saved_filter_criteria
-        flash.notice+= " saved filter criteria used: params= " + params.to_s
-      end
-    end
     unless new_sort_criteria_supplied?
       if saved_sort_criteria?
-        if flash.notice== nil
-          flash.notice= ' '
-        end
         restore_saved_sort_criteria
-        flash.notice+= " saved sort criteria used: params= " + params.to_s
+      end
+    end
+    unless new_filter_criteria_supplied?
+      if saved_filter_criteria?
+        restore_saved_filter_criteria
       end
     end
     reset_saved_params
@@ -192,7 +183,7 @@ class MoviesController < ApplicationController
       Movie.accessible_attributes.each { |attr|
         if params[:sort_by]== attr
           @sort_by= attr
-          session[:saved_params] = {:sort_by => attr}
+          session[:saved_params][:sort_by]=  attr
           @sorted_by_user= true
         end
       }
