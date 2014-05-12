@@ -154,7 +154,7 @@ class MoviesController < ApplicationController
       if params.has_key? rating
         # use the supplied rating filter
         @ratings[rating]= params[rating].to_boolean
-        add_to_saved_rating rating
+        save_criteria rating
       else
         @ratings[rating]= '0'.to_boolean
       end
@@ -170,20 +170,19 @@ class MoviesController < ApplicationController
     }
     return number_selected
   end
-  def add_to_saved_rating (rating)
+  def save_criteria (key)
     ensure_session_has_key
-    session[:saved_params][rating] = params[rating]
+    session[:saved_params][key] = params[key]
+    return params[key]
   end
   def sort_criteria
-    #default sort field
-    @sort_by= 'title'
+    @sort_by= 'title' #default sort field
     @sorted_by_user= false
     if new_sort_criteria_supplied?
       # enact each new sort criteria, if it's a valid field in the model
       Movie.accessible_attributes.each { |attr|
         if params[:sort_by]== attr
-          @sort_by= attr
-          session[:saved_params][:sort_by]=  attr
+          @sort_by= save_criteria :sort_by
           @sorted_by_user= true
         end
       }
