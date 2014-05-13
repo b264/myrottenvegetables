@@ -191,10 +191,18 @@ class MoviesController < ApplicationController
     return params[key]
   end
   def sort_criteria
-    @sort_by= 'title' #default sort field
+    # set default sort field to first column
+    @sort_by= ''
+    Movie.accessible_attributes.each { |attr|
+      unless attr.empty?
+        if @sort_by.empty?
+          @sort_by= attr
+        end
+      end
+    }
     @sorted_by_user= false
     if new_sort_criteria_supplied?
-      # enact each new sort criteria, if it's a valid field in the model
+      # enact new sort criteria, if it's a valid field in the model
       Movie.accessible_attributes.each { |attr|
         if params[:sort_by]== attr
           @sort_by= save_criteria :sort_by
