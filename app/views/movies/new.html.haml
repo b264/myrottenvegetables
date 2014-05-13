@@ -1,6 +1,6 @@
-=provide(:title, 'New Movie')
+= provide(:title, 'New Movie')
 %h2 Create new movie
-= form_for @movie do |m|
+= form_for @movie do |movie|
   %table#new_movie
     %thead
       %tr
@@ -10,9 +10,9 @@
         %th Description
     %tbody
       %tr
-        %td= m.text_field :title
-        %td= m.text_field :rating
-        %td= m.text_field :release_date
-        %td= m.text_field :description
-  =m.submit 'Create'
-=link_to 'Back to Index', movies_path
+        %td= movie.text_field :title
+        %td= movie.text_field :rating
+        %td= movie.text_field :release_date
+        %td= movie.text_field :description
+  = movie.submit 'Create'
+= link_to 'Back to Index', movies_path
