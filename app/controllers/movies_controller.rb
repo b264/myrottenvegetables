@@ -2,7 +2,7 @@ class MoviesController < ApplicationController
   # database CRUD actions below
   def create
     @movie= Movie.new
-    fill_methods_by_hash! @movie, params[:movie]
+    fill_attribs_by_hash! @movie, params[:movie]
     action_notify @movie.title, @movie.validated_save
   end
   def show
@@ -10,7 +10,7 @@ class MoviesController < ApplicationController
   end
   def update
     @movie= Movie.find_by_id(params[:id])
-    fill_methods_by_hash! @movie, params
+    fill_attribs_by_hash! @movie, params
     action_notify @movie.title, @movie.validated_save
   end
   def destroy
@@ -75,12 +75,27 @@ class MoviesController < ApplicationController
     redirect_to movies_path(), :method => :get
   end
   def fill_methods_by_hash!(object, hash)
+    # warning: unsafe; see fill_attribs_by_hash!
+    raise SecurityError, 'Obsolete method called'
     hash.each_pair { |key, value|
       eval (%{
         if object.respond_to? "#{key}"
           object.#{key}= value
         end
       })
+    }
+  end
+  def fill_attribs_by_hash! (movie_object, params_hash)
+    Movie.accessible_attributes.each { |attr|
+      unless attr.empty?
+        eval (%{
+          if params_hash.has_key? "#{attr}"
+            if movie_object.respond_to? "#{attr}"
+              movie_object.#{attr}= params_hash["#{attr}"]
+            end
+          end
+        })
+      end
     }
   end
   def redirect_to_RESTful_URI
