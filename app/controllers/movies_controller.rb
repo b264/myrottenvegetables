@@ -19,7 +19,7 @@ class MoviesController < ApplicationController
   end
   # CRUD accessories
   def new
-    @movie= Movie.new
+    # no information to feed view
   end
   def edit
     @movie= Movie.find_by_id(params[:id])
