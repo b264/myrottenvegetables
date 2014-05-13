@@ -1,24 +1,21 @@
 class Movie < ActiveRecord::Base
   attr_accessible :title, :rating, :release_date, :description
-  def self.default_scope
-    #sort ascending by title
-    #order('title ASC')
-  end
   def date_formatted
     if self.release_date.nil?
-      ''
+      return ''
     else
-      self.release_date.strftime("%d %B %Y")
+      return self.release_date.strftime("%d %B %Y")
     end
   end
-  def date_formatted=(new_value)
+  def date_formatted= (new_value)
     @release_date= Date.parse(new_value)
   end
   def validated_save
     if self.title.empty? or blacklisted_rating? self.rating
-      #refuse to save without a title at a minimum
+      # refuse to save
       return false
     else
+      # save to db
       return self.save
     end
   end
@@ -39,6 +36,10 @@ class Movie < ActiveRecord::Base
     Movie.find(:all, :select => "DISTINCT(rating)", :order => 'rating DESC').each { |movie|
       ratings.push movie.rating
     }
-    ratings
+    return ratings
+  end
+  def self.default_scope
+    # sort ascending by title
+    # *removed* order('title ASC')
   end
 end
