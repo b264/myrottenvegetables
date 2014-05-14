@@ -85,13 +85,13 @@ class MoviesController < ApplicationController
       })
     }
   end
-  def fill_attribs_by_hash! (movie_object, params_hash)
-    Movie.accessible_attributes.each { |attr|
+  def fill_attribs_by_hash! (model_instance_object, hash)
+    model_instance_object.class.accessible_attributes.each { |attr|
       unless attr.empty?
         eval (%{
-          if params_hash.has_key? "#{attr}"
-            if movie_object.respond_to? "#{attr}"
-              movie_object.#{attr}= params_hash["#{attr}"]
+          if hash.has_key? "#{attr}"
+            if model_instance_object.respond_to? "#{attr}"
+              model_instance_object.#{attr}= hash["#{attr}"]
             end
           end
         })
