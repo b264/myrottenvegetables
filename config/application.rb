@@ -69,6 +69,6 @@ module Myrottenvegetables
     config.assets.initialize_on_precompile = false
     
     # always force SSL connection
-    config.force_ssl = true
+    #config.force_ssl = true
   end
 end
