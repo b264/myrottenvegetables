@@ -18,6 +18,11 @@ gem 'haml'
 # we don't need the debugger in :production
 group :development, :test do
   gem 'debugger'
+  #gem 'ruby-debug19'
+  gem 'database_cleaner'
+  gem 'capybara'
+  gem 'launchy'
+  gem 'rspec-rails'
 end
 group :test do
   gem 'cucumber-rails'
