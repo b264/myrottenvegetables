@@ -17,6 +17,10 @@ end
 
 module Myrottenvegetables
   class Application < Rails::Application
+    # always force SSL connection
+    # this is done in production.rb for production mode only
+    #config.force_ssl = true
+  
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -68,7 +72,5 @@ module Myrottenvegetables
     # environment not present to boot for heroku precompile
     config.assets.initialize_on_precompile = false
     
-    # always force SSL connection
-    #config.force_ssl = true
   end
 end
