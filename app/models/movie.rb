@@ -1,5 +1,6 @@
 class Movie < ActiveRecord::Base
   attr_accessible :title, :rating, :release_date, :description
+  # instance methods
   def date_formatted
     if self.release_date.nil?
       return ''
@@ -31,6 +32,10 @@ class Movie < ActiveRecord::Base
     end
     return true
   end
+  # class methods
+  #def self.find_in_tmdb
+    
+  #end
   def self.distinct_ratings
     ratings= Array.new
     Movie.find(:all, :select => "DISTINCT(rating)", :order => 'rating DESC').each { |movie|

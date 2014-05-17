@@ -37,6 +37,10 @@ class MoviesController < ApplicationController
       @movies= Movie.where(:rating => match_list).order(sort_criteria)
     end
   end
+  # other routes
+  def search_tmdb
+    Movie.find_in_tmdb(params[:search_terms])
+  end
   # methods without URI routing assigned
   def force_clear_saved_session?
     # URI parameters override to force-clear saved session information

@@ -1,6 +1,7 @@
 Myrottenvegetables::Application.routes.draw do
   resources :movies
   root :to => redirect('/movies')
+  post '/movies/search_tmdb'
   
   #http://aqueous-temple-2501.herokuapp.com/ | git@heroku.com:aqueous-temple-2501.git
   #http://secret-crag-4470.herokuapp.com/ | git@heroku.com:secret-crag-4470.git
