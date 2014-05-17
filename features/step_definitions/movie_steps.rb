@@ -1,5 +1,3 @@
-# Add a declarative step here for populating the DB with movies.
-
 Given /the following movies exist/ do |movies_table|
   movies_table.hashes.each do |hash|
     # each returned element will be a hash whose key is the table header.
@@ -33,13 +31,21 @@ end
 Then /I should see exactly (.*) movies/ do |amount|
   movies= Movie.all
   movies.count.should be amount.to_i
-  #expect(movies.count).to eq number
 end
 
-Then(/^I should see "(.*?)" and "(.*?)" rated movies$/) do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
-end
-
-Then(/^I should not see "(.*?)" and "(.*?)" rated movies$/) do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
+Then(/^I should (not )?see "(.*?)" and "(.*?)" rated movies$/) do |be_hidden, rating1, rating2|
+  ratings_selected=[rating1, rating2]
+  movies= Movie.all
+  ratings_selected.each do |rating|
+    movies.each do |movie|
+      movie_position= /#{movie.title}/=~ page.body
+      if movie.rating== rating
+        if be_hidden
+          movie_position.should be_nil
+        else
+          movie_position.should_not be_nil
+        end
+      end
+    end
+  end
 end
