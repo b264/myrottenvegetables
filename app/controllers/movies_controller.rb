@@ -204,12 +204,14 @@ class MoviesController < ApplicationController
     if new_sort_criteria_supplied?
       # enact new sort criteria, if it's a valid field in the model
       Movie.accessible_attributes.each { |attr|
-        if params[:sort_by]== attr
-          @sort_by= save_criteria :sort_by
-          @sorted_by_user= true
+        unless attr.empty?
+          if params[:sort_by]== attr
+            @sort_by= save_criteria :sort_by
+            @sorted_by_user= true
+          end
         end
       }
     end
-    return params[:sort_by]
+    return @sort_by
   end
 end

@@ -10,7 +10,6 @@ Given /the following movies exist/ do |movies_table|
     movie.description=hash[:description]
     movie.validated_save
   end
-  #flunk "Unimplemented"
 end
 
 # Make sure that one string (regexp) occurs before or after another one
@@ -24,7 +23,6 @@ Then /I should see "(.*)" before "(.*)"/ do |e1, e2|
   e1_position.should_not be_nil
   e2_position.should_not be_nil
   e1_position.should < e2_position
-  #flunk "Unimplemented"
 end
 
 # Make it easier to express checking or unchecking several boxes at once
