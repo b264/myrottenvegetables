@@ -22,11 +22,15 @@ Background: movies have been added to database
   And  I am on the RottenVegetables home page
 
 Scenario: restrict to movies with 'PG' or 'R' ratings
-  # enter step(s) to check the 'PG' and 'R' checkboxes
-  # enter step(s) to uncheck all other checkboxes
-  # enter step to "submit" the search form on the homepage
-  # enter step(s) to ensure that PG and R movies are visible
-  # enter step(s) to ensure that other movies are not visible
+  When I uncheck the following ratings: G, PG-13
+  When I check the following ratings: PG, R
+  When I press "Refresh"
+  Then I should see "PG" and "R" rated movies
+  Then I should not see "G" and "PG" rated movies
+  Then I should not see "PG-13" and "NC-17" rated movies
+  Then I should not see "R" and "G" rated movies
 
 Scenario: all ratings selected
-  # see assignment
+  When I check the following ratings: G, R, PG, PG-13
+  When I press "Refresh"
+  Then I should see exactly 10 movies

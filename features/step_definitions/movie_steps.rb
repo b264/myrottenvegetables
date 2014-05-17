@@ -12,12 +12,7 @@ Given /the following movies exist/ do |movies_table|
   end
 end
 
-# Make sure that one string (regexp) occurs before or after another one
-#   on the same page
-
 Then /I should see "(.*)" before "(.*)"/ do |e1, e2|
-  #  ensure that that e1 occurs before e2.
-  #  page.body is the entire content of the page as a string.
   e1_position= /#{e1}/=~ page.body
   e2_position= /#{e2}/=~ page.body
   e1_position.should_not be_nil
@@ -25,16 +20,26 @@ Then /I should see "(.*)" before "(.*)"/ do |e1, e2|
   e1_position.should < e2_position
 end
 
-# Make it easier to express checking or unchecking several boxes at once
-#  "When I uncheck the following ratings: PG, G, R"
-#  "When I check the following ratings: G"
-
 When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
-  # HINT: use String#split to split up the rating_list, then
-  #   iterate over the ratings and reuse the "When I check..." or
-  #   "When I uncheck..." steps in lines 89-95 of web_steps.rb
+  rating_list.to_s.split(", ").each do |rating|
+    if uncheck
+      step "I uncheck \"#{rating}\""
+    else
+      step "I check \"#{rating}\""
+    end
+  end
 end
 
-Then /I should see all the movies/ do
-  # Make sure that all the movies in the app are visible in the table
+Then /I should see exactly (.*) movies/ do |amount|
+  movies= Movie.all
+  movies.count.should be amount.to_i
+  #expect(movies.count).to eq number
+end
+
+Then(/^I should see "(.*?)" and "(.*?)" rated movies$/) do |arg1, arg2|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then(/^I should not see "(.*?)" and "(.*?)" rated movies$/) do |arg1, arg2|
+  pending # express the regexp above with the code you wish you had
 end
