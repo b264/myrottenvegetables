@@ -22,9 +22,9 @@ Background: movies have been added to database
   And I am on the RottenVegetables home page
 
 Scenario: sort movies alphabetically
-  When I follow "Movie List"
+  When I follow "Reset filter and sort settings"
   Then I should see "Chicken Run" before "Chocolat"
 
 Scenario: sort movies in increasing order of release date
   When I follow "Release Date"
-  # your steps here
+  Then I should see "12 June 1981" before "26 October 1984"

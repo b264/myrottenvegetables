@@ -19,9 +19,11 @@ end
 Then /I should see "(.*)" before "(.*)"/ do |e1, e2|
   #  ensure that that e1 occurs before e2.
   #  page.body is the entire content of the page as a string.
-  eval(%{
-    pass unless nil== (page.body.split(/#{e1}/).last =~ /#{e2}/)
-  })
+  e1_position= /#{e1}/=~ page.body
+  e2_position= /#{e2}/=~ page.body
+  e1_position.should_not be_nil
+  e2_position.should_not be_nil
+  e1_position.should < e2_position
   #flunk "Unimplemented"
 end
 
