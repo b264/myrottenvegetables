@@ -24,7 +24,19 @@ Background: movies have been added to database
 Scenario: sort movies alphabetically
   When I follow "Reset filter and sort settings"
   Then I should see "Chicken Run" before "Chocolat"
+  Then I should not see "Chicken Run" before "Aladdin"
 
 Scenario: sort movies in increasing order of release date
   When I follow "Release Date"
   Then I should see "12 June 1981" before "26 October 1984"
+  Then I should see "21 June 2000" before "10 August 2011"
+  Then I should not see "10 August 2011" before "21 July 1989"
+
+Scenario: sort movies alphabetically
+  When I follow "Reset filter and sort settings"
+  Then I should see "Aladdin" before "Amelie"
+  Then I should not see "Raiders of the Lost Ark" before "2001: A Space Odyssey"
+
+Scenario: sort movies alphabetically
+  When I follow "Reset filter and sort settings"
+  Then I should see "Chicken Run" before "The Incredibles"

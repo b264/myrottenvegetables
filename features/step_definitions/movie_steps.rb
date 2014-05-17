@@ -10,12 +10,16 @@ Given /the following movies exist/ do |movies_table|
   end
 end
 
-Then /I should see "(.*)" before "(.*)"/ do |e1, e2|
+Then /I should (not )?see "(.*)" before "(.*)"/ do |not_see, e1, e2|
   e1_position= /#{e1}/=~ page.body
   e2_position= /#{e2}/=~ page.body
   e1_position.should_not be_nil
   e2_position.should_not be_nil
-  e1_position.should < e2_position
+  unless not_see
+    e1_position.should < e2_position
+  else
+    e1_position.should > e2_position
+  end
 end
 
 When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
@@ -30,7 +34,14 @@ end
 
 Then /I should see exactly (.*) movies/ do |amount|
   movies= Movie.all
-  movies.count.should be amount.to_i
+  visible_movies= 0
+  movies.each do |movie|
+    movie_position= /#{movie.title}/=~ page.body
+    unless movie_position== nil
+      visible_movies+= 1
+    end
+  end 
+  visible_movies.should be amount.to_i
 end
 
 Then(/^I should (not )?see "(.*?)" and "(.*?)" rated movies$/) do |be_hidden, rating1, rating2|
