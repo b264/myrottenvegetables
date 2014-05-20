@@ -187,6 +187,7 @@ class MoviesController < ApplicationController
         number_selected+= 1
       end
     }
+    @num_selected= number_selected
     return number_selected
   end
   def save_criteria (key)

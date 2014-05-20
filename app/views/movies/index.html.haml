@@ -7,7 +7,10 @@
   - @ratings.each do |rating, visible|
     %label
       = rating
-      = check_box_tag rating, '1', visible, :id => "ratings_#{rating}"
+      - if @num_selected== 0
+        = check_box_tag rating, '1', true, :id => "ratings_#{rating}"
+      - else
+        = check_box_tag rating, '1', visible, :id => "ratings_#{rating}"
   = submit_tag 'Refresh', :id => :ratings_submit
 %br
 %table#movies
