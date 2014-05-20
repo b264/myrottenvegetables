@@ -12,7 +12,7 @@
       %tr#fields
         %td.title= text_field :movie, :title
         %td.rating= text_field :movie, :rating
-        %td.release_date= date_select :movie, :release_date, :start_year => 1970, :end_year => Time.now.year, :order => [:day, :month, :year]
+        %td.date_formatted= date_select :movie, :release_date, :start_year => 1970, :end_year => Time.now.year, :order => [:day, :month, :year]
         %td.description= text_field :movie, :description
   = submit_tag 'Save', :name => 'user_selection'
 = link_to 'Back to Index', movies_path, :method => :get

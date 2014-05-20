@@ -94,7 +94,7 @@ class MoviesController < ApplicationController
       unless attr.empty?
         eval (%{
           if hash.has_key? "#{attr}"
-            if model_instance_object.respond_to? "#{attr}"
+            if model_instance_object.respond_to? "#{attr}="
               model_instance_object.#{attr}= hash["#{attr}"]
             end
           end
