@@ -1,5 +1,5 @@
 class CreateMovies < ActiveRecord::Migration
-#skeleton created by bash: rails generate migration AddClassic
+#skeleton created by bash: rails generate migration CreateMovies
   #migrate up to this version schema
   def up
     create_table 'movies' do |t|
