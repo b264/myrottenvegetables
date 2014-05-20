@@ -16,10 +16,11 @@
       - Movie.accessible_attributes.each do |attr|
         -unless attr.empty?
           - if @sort_by== attr
-            - if @sorted_by_user
-              %th.highlight= attr.to_s.titleize
-            - else
-              %th= attr.to_s.titleize
+            -# if @sorted_by_user
+              -#%th.highlight= attr.to_s.titleize
+            %th.highlight= eval("link_to attr.to_s.titleize, movies_path(:sort_by => attr), :method => :get, :class => :link, :id => :#{attr.to_s}_header")
+            -# else
+              -#%th= attr.to_s.titleize
           - else
             %th= eval("link_to attr.to_s.titleize, movies_path(:sort_by => attr), :method => :get, :class => :link, :id => :#{attr.to_s}_header")
   %tbody
