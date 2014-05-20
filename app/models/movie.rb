@@ -5,8 +5,8 @@ class Movie < ActiveRecord::Base
     if self.release_date.nil?
       return ''
     else
-      #return self.release_date.strftime("%d %B %Y")
-      return self.release_date.strftime("%Y %m %d")
+      return self.release_date.strftime("%d %B %Y")
+      #return self.release_date.strftime("%Y %m %d")
     end
   end
   def date_formatted= (new_value)
