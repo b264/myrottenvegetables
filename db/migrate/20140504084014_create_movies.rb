@@ -1,4 +1,5 @@
 class CreateMovies < ActiveRecord::Migration
+#skeleton created by bash: rails generate migration AddClassic
   #migrate up to this version schema
   def up
     create_table 'movies' do |t|
@@ -6,6 +7,7 @@ class CreateMovies < ActiveRecord::Migration
       t.string 'rating'
       t.text 'description'
       t.datetime 'release_date'
+      #add fields to let rails automatically track when records are add/modified
       t.timestamps
     end
   end
