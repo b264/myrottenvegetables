@@ -28,6 +28,7 @@ class Movie < ActiveRecord::Base
     elsif rating== 'commit'
     elsif rating== '_method'
     elsif rating== 'authenticity_token'
+    elsif rating=~ /\s/
     else
       return false
     end
